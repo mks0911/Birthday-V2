@@ -7,13 +7,22 @@ import IntroScreen from "@/components/screens/IntroScreen"
 import CakeScreen from "@/components/screens/CakeScreen"
 import PhotosScreen from "@/components/screens/PhotosScreen"
 import MessageScreen from "@/components/screens/MessageScreen"
-
+import Countdown from "@/components/Countdown"
 export default function HomePage() {
   const [currentScreen, setCurrentScreen] = useState(0)
 
+
+  const birthdayDate = new Date("2026-09-08T00:00:00")
+  const [isBirthdayOver, setisBirthdayOver] = useState(new Date().getTime() >= birthdayDate.getTime())
+
+
   const screens = [
     <LoaderScreen key="loader" onDone={() => setCurrentScreen(1)} />,
-    <IntroScreen key="intro" onNext={() => setCurrentScreen(2)} />,
+    !isBirthdayOver
+      ? <Countdown key="countdown" onComplete={() => setisBirthdayOver(true)} birthdayDate={birthdayDate} />
+      : <IntroScreen key="intro" onNext={() => setCurrentScreen(2)} onMusicStart={() => setMusicStarted(true)} />,
+
+    // <IntroScreen key="intro" onNext={() => setCurrentScreen(2)} />,
     <CakeScreen key="cake" onNext={() => setCurrentScreen(3)} />,
     <PhotosScreen key="photos" onNext={() => setCurrentScreen(4)} />,
     <MessageScreen key="message" onNext={() => setCurrentScreen(5)} />,
@@ -46,7 +55,7 @@ export default function HomePage() {
           delay: 1,
         }}
         className="fixed bottom-4 right-4 text-sm text-white/40 pointer-events-none z-50 font-light">
-        @anujbuilds
+        
       </motion.div>
     </main>
   )
